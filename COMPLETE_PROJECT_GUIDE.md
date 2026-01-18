@@ -214,7 +214,7 @@ streamlit run dashboard.py
 
 ```bash
 # Required for LLM features
-GROQ_API_KEY=gsk_nmUqwvOn5qD9bOd5z1cuWGdyb3FYgnIcFBqbMcUFE4kbS5sfaKej
+GROQ_API_KEY=gsk_nxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 # Optional
 OPENAI_API_KEY=your_key
@@ -412,3 +412,4 @@ You now have a **complete, production-ready system** that can:
 ---
 
 **Built for Infosys Project - Complete AI Consumer Intelligence Platform**
+
