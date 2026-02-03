@@ -1,0 +1,38 @@
+# Optimized requirements for faster installation
+# Install core dependencies first, then RAG, then dashboards
+
+# ============================================
+# CORE DEPENDENCIES (Essential)
+# ============================================
+pandas==2.1.4
+numpy>=1.24.0,<2.0.0
+python-dotenv>=1.0.0
+requests>=2.31.0
+tqdm>=4.66.0
+
+# ============================================
+# API CLIENTS (Lightweight)
+# ============================================
+google-api-python-client>=2.100.0
+groq>=0.4.2
+langdetect==1.0.9
+
+# ============================================
+# RAG DEPENDENCIES (Install separately if slow)
+# ============================================
+# Option 1: Minimal (faster install)
+langchain>=0.2.0
+langchain-community>=0.2.0
+pinecone-client>=3.0.0
+
+# Option 2: Full RAG (slower but more features)
+# langchain-pinecone>=0.1.0  # Uncomment if needed
+# sentence-transformers>=2.2.0,<3.0.0  # Heavy - install separately
+
+# ============================================
+# DASHBOARD DEPENDENCIES (Optional)
+# ============================================
+plotly>=5.18.0
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+# kaleido>=0.2.1  # Only needed for static image export
