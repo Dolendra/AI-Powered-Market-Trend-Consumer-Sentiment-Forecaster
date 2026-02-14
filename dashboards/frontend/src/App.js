@@ -21,7 +21,6 @@ import {
 } from '@mui/material';
 import ChatIcon from '@mui/icons-material/Chat';
 import CloseIcon from '@mui/icons-material/Close';
-import DownloadIcon from '@mui/icons-material/Download';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import WarningAmberIcon from '@mui/icons-material/WarningAmber';
@@ -55,7 +54,6 @@ function App() {
   const [floatQuery, setFloatQuery] = useState('');
   const [floatAnswer, setFloatAnswer] = useState(null);
   const [floatLoading, setFloatLoading] = useState(false);
-  const [chatHistory, setChatHistory] = useState([]);
 
   // Reports & Alerts
   const [reportLoading, setReportLoading] = useState(null); // 'pdf' | 'excel' | null
@@ -119,7 +117,6 @@ function App() {
       const response = await axios.post(`${API_BASE}/api/rag/query`, { question: q, k: 5 });
       const data = response.data;
       setFloatAnswer(data);
-      setChatHistory((prev) => [...prev, { question: q, answer: data }]);
     } catch (err) {
       setSnackbar({ open: true, message: err.response?.data?.detail || err.message, severity: 'error' });
     } finally {
