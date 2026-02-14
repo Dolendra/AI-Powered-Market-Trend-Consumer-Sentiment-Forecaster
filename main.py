@@ -75,7 +75,7 @@ class PipelineHealth:
 
 def check_prerequisites() -> bool:
     """Check if all prerequisites are met."""
-    logger.info("\n🔍 Checking prerequisites...")
+    logger.info("Checking prerequisites...")
     
     required_files = [
         ("API Config", Path(__file__).parent / ".env"),
@@ -85,9 +85,9 @@ def check_prerequisites() -> bool:
     all_ok = True
     for name, filepath in required_files:
         if filepath.exists():
-            logger.info(f"   ✅ {name}: Found")
+            logger.info(f"   [OK] {name}: Found")
         else:
-            logger.warning(f"   ⚠️ {name}: Missing - {filepath}")
+            logger.info(f"   [WARNING] {name}: Missing - {filepath}")
             all_ok = False
     
     return all_ok
@@ -104,20 +104,20 @@ def validate_file(filepath: Path, expected_columns: List[str] = None) -> bool:
         if expected_columns:
             missing_cols = set(expected_columns) - set(df.columns)
             if missing_cols:
-                logger.warning(f"⚠️ Missing columns in {filepath.name}: {missing_cols}")
+                logger.info(f"[WARNING] Missing columns in {filepath.name}: {missing_cols}")
                 return False
         
         return True
     except Exception as e:
-        logger.error(f"❌ Invalid file {filepath.name}: {e}")
+        logger.info(f"[ERROR] Invalid file {filepath.name}: {e}")
         return False
 
 
 def stage_ingestion(health: PipelineHealth) -> bool:
     """Execute data ingestion stage."""
-    logger.info("\n" + "=" * 70)
-    logger.info("📥 STAGE 1: Data Ingestion")
-    logger.info("=" * 70)
+    logger.info("")
+    logger.info("STAGE 1: Data Ingestion")
+    logger.info("-" * 50)
     
     health.mark_stage_start("ingestion")
     
@@ -133,20 +133,20 @@ def stage_ingestion(health: PipelineHealth) -> bool:
         
         record_count = len(pd.read_csv(RAW_CSV_FILE))
         health.mark_stage_complete("ingestion", record_count)
-        logger.info(f"✅ Ingestion complete: {record_count:,} records")
+        logger.info(f"[OK] Ingestion complete: {record_count:,} records")
         return True
         
     except Exception as e:
-        logger.error(f"❌ Ingestion failed: {e}")
+        logger.info(f"[ERROR] Ingestion failed: {e}")
         health.mark_stage_failed("ingestion", str(e))
         return False
 
 
 def stage_cleaning(health: PipelineHealth) -> bool:
     """Execute data cleaning stage."""
-    logger.info("\n" + "=" * 70)
-    logger.info("🧹 STAGE 2: Data Cleaning")
-    logger.info("=" * 70)
+    logger.info("")
+    logger.info("STAGE 2: Data Cleaning")
+    logger.info("-" * 50)
     
     health.mark_stage_start("cleaning")
     
@@ -166,20 +166,20 @@ def stage_cleaning(health: PipelineHealth) -> bool:
         
         record_count = len(pd.read_csv(CLEAN_STAGE_1_FILE))
         health.mark_stage_complete("cleaning", record_count)
-        logger.info(f"✅ Cleaning complete: {record_count:,} records")
+        logger.info(f"[OK] Cleaning complete: {record_count:,} records")
         return True
         
     except Exception as e:
-        logger.error(f"❌ Cleaning failed: {e}")
+        logger.info(f"[ERROR] Cleaning failed: {e}")
         health.mark_stage_failed("cleaning", str(e))
         return False
 
 
 def stage_extraction(health: PipelineHealth) -> bool:
     """Execute feature extraction stage."""
-    logger.info("\n" + "=" * 70)
-    logger.info("[STAGE] Feature Extraction")
-    logger.info("=" * 70)
+    logger.info("")
+    logger.info("STAGE 3: Feature Extraction")
+    logger.info("-" * 50)
     
     health.mark_stage_start("extraction")
     
@@ -199,11 +199,11 @@ def stage_extraction(health: PipelineHealth) -> bool:
         
         record_count = len(pd.read_csv(FEATURE_SENTIMENT_FILE))
         health.mark_stage_complete("extraction", record_count)
-        logger.info(f"✅ Extraction complete: {record_count:,} records")
+        logger.info(f"[OK] Extraction complete: {record_count:,} records")
         return True
         
     except Exception as e:
-        logger.error(f"❌ Feature extraction failed: {e}")
+        logger.info(f"[ERROR] Feature extraction failed: {e}")
         health.mark_stage_failed("extraction", str(e))
         return False
 
@@ -220,18 +220,18 @@ def run_full_pipeline(skip_stages: List[str] = None) -> bool:
     """
     skip_stages = skip_stages or []
     
-    logger.info("\n")
-    logger.info("╔" + "=" * 68 + "╗")
-    logger.info("║" + " " * 12 + "REDMI SENTIMENT ANALYSIS PIPELINE" + " " * 15 + "║")
-    logger.info("║" + " " * 20 + f"Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}" + " " * 27 + "║")
-    logger.info("╚" + "=" * 68 + "╝")
+    logger.info("")
+    logger.info("=" * 60)
+    logger.info("REDMI SENTIMENT ANALYSIS PIPELINE")
+    logger.info("Started: " + datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
+    logger.info("=" * 60)
     
     health = PipelineHealth()
     health.start_time = time.time()
     
     # Check prerequisites
     if not check_prerequisites():
-        logger.warning("⚠️ Some prerequisites missing, but continuing...")
+        logger.info("[WARNING] Some prerequisites missing, but continuing...")
     
     stages = [
         ("ingestion", stage_ingestion),
@@ -242,18 +242,21 @@ def run_full_pipeline(skip_stages: List[str] = None) -> bool:
     # Run stages
     for stage_name, stage_func in stages:
         if stage_name in skip_stages:
-            logger.info(f"\n⏭️ Skipping stage: {stage_name}")
+            logger.info("")
+            logger.info(f"[SKIPPED] Stage: {stage_name}")
             continue
         
         try:
             success = stage_func(health)
             if not success:
-                logger.error(f"\n❌ Pipeline halted at stage: {stage_name}")
-                logger.error("   Use --skip-stages flag to resume from next stage")
+                logger.info("")
+                logger.info(f"[ERROR] Pipeline halted at stage: {stage_name}")
+                logger.info("   Use --skip-stages flag to resume from next stage")
                 break
         except Exception as e:
-            logger.error(f"\n❌ Unexpected error in {stage_name}: {e}")
-            logger.error("   Pipeline halted")
+            logger.info("")
+            logger.info(f"[ERROR] Unexpected error in {stage_name}: {e}")
+            logger.info("   Pipeline halted")
             health.mark_stage_failed(stage_name, str(e))
             break
     
@@ -261,33 +264,36 @@ def run_full_pipeline(skip_stages: List[str] = None) -> bool:
     health.end_time = time.time()
     summary = health.get_summary()
     
-    logger.info("\n" + "=" * 70)
-    logger.info("[REPORT] PIPELINE EXECUTION SUMMARY")
-    logger.info("=" * 70)
+    logger.info("")
+    logger.info("-" * 50)
+    logger.info("PIPELINE EXECUTION SUMMARY")
+    logger.info("-" * 50)
     
     for stage_name, stage_info in summary["stages"].items():
-        status = "✅" if stage_info["status"] == "complete" else "❌" if stage_info["status"] == "failed" else "⏳"
+        status = "[OK]" if stage_info["status"] == "complete" else "[FAIL]" if stage_info["status"] == "failed" else "[PENDING]"
         records = f"{stage_info['records']:,}" if stage_info.get("records") else "N/A"
         time_str = f"{stage_info['time']:.1f}s" if stage_info.get("time") else "N/A"
         logger.info(f"{status} {stage_name:12} | Records: {records:>10} | Time: {time_str:>8}")
     
     total_time = summary["total_time"]
-    logger.info("=" * 70)
+    logger.info("-" * 50)
     
     if summary["all_passed"]:
-        logger.info(f"✅ PIPELINE SUCCEEDED! Total time: {total_time:.1f}s")
-        logger.info(f"\n📁 Output files:")
+        logger.info(f"[SUCCESS] PIPELINE SUCCEEDED! Total time: {total_time:.1f}s")
+        logger.info("")
+        logger.info("Output files:")
         logger.info(f"   - Raw data:         {RAW_CSV_FILE}")
         logger.info(f"   - Cleaned data:     {CLEAN_STAGE_1_FILE}")
         logger.info(f"   - Feature sentiment: {FEATURE_SENTIMENT_FILE}")
-        logger.info(f"[NEXT] Next steps:")
-        logger.info(f"   1. Review output files for data quality")
-        logger.info(f"   2. Perform sentiment analysis and visualization")
-        logger.info(f"   3. Generate insights and reports")
+        logger.info("")
+        logger.info("Next steps:")
+        logger.info("   1. Review output files for data quality")
+        logger.info("   2. Perform sentiment analysis and visualization")
+        logger.info("   3. Generate insights and reports")
     else:
-        logger.error(f"❌ PIPELINE FAILED! Check logs above for details.")
+        logger.info(f"[FAILED] PIPELINE FAILED! Check logs above for details.")
     
-    logger.info("=" * 70)
+    logger.info("=" * 60)
     
     return summary["all_passed"]
 

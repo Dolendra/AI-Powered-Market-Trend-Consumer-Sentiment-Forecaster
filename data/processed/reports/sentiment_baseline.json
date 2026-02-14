@@ -1,0 +1,24 @@
+{
+  "overall_score": -0.084,
+  "overall_positive": 499,
+  "overall_negative": 617,
+  "overall_total": 1403,
+  "feature_scores": {
+    "anc": -0.052,
+    "bass": -0.207,
+    "battery": -0.153,
+    "build_quality": -0.381,
+    "call_quality": -0.146,
+    "charging": -0.353,
+    "comfort": 0.0,
+    "connectivity": -0.438,
+    "design": 0.026,
+    "durability": -0.6,
+    "fit": -0.154,
+    "latency": -0.391,
+    "mic_quality": -0.081,
+    "price": 0.169,
+    "sound_quality": -0.083,
+    "value_for_money": 0.5
+  }
+}

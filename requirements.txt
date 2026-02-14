@@ -1,23 +1,54 @@
-# Core dependencies
+# ============================================
+# Complete Requirements for Redmi Sentiment Analysis
+# ============================================
+
+# ============================================
+# CORE DEPENDENCIES
+# ============================================
 pandas==2.1.4
 numpy>=1.24.0,<2.0.0
 python-dotenv>=1.0.0
-google-api-python-client>=2.100.0
-langdetect==1.0.9
-groq>=0.4.2
 requests>=2.31.0
 tqdm>=4.66.0
+urllib3>=2.0.0  # For proxy support and HTTP client
 
-# RAG & Vector Store (optimized versions)
+# ============================================
+# API CLIENTS
+# ============================================
+google-api-python-client>=2.100.0  # YouTube API
+groq>=0.4.2  # Groq LLM API
+langdetect==1.0.9  # Language detection
+
+# ============================================
+# RAG & LANGCHAIN DEPENDENCIES
+# ============================================
 langchain>=0.2.0
 langchain-community>=0.2.0
-langchain-pinecone>=0.1.0
-langchain-huggingface>=0.0.1
+langchain-core>=0.2.0
+langchain-pinecone>=0.1.0  # Pinecone vector store
+langchain-huggingface>=0.0.1  # HuggingFace embeddings
 pinecone-client>=3.0.0
-sentence-transformers>=2.2.0,<3.0.0
+sentence-transformers>=2.2.0,<3.0.0  # Embedding model
 
-# Dashboard & API
+# ============================================
+# DASHBOARD & API
+# ============================================
 plotly>=5.18.0
 fastapi>=0.109.0
 uvicorn[standard]>=0.27.0
-kaleido>=0.2.1
+pydantic>=2.0.0  # Data validation for FastAPI
+kaleido>=0.2.1  # Static image export for Plotly
+
+# ============================================
+# ALERTS & REPORTING
+# ============================================
+yagmail>=0.15.0  # Email alerts
+reportlab>=4.0.0  # PDF generation
+openpyxl>=3.1.0  # Excel generation
+
+# ============================================
+# OPTIONAL: Development & Testing
+# ============================================
+# pytest>=7.0.0
+# black>=23.0.0
+# flake8>=6.0.0

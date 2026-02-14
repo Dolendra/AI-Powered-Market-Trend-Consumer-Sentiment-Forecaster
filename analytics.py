@@ -186,9 +186,9 @@ class SentimentAnalyzer:
     
     def generate_report(self) -> Dict:
         """Generate comprehensive analysis report."""
-        logger.info("\n" + "=" * 70)
-        logger.info("📊 GENERATING SENTIMENT ANALYSIS REPORT")
-        logger.info("=" * 70)
+        logger.info("")
+        logger.info("GENERATING SENTIMENT ANALYSIS REPORT")
+        logger.info("-" * 50)
         
         report = {
             "timestamp": pd.Timestamp.now().isoformat(),
@@ -201,16 +201,19 @@ class SentimentAnalyzer:
         
         # Log summary
         overall = report["overall_sentiment"]
-        logger.info(f"\n📈 Overall Sentiment Score: {overall['sentiment_score']:.3f}")
+        logger.info("")
+        logger.info(f"Overall Sentiment Score: {overall['sentiment_score']:.3f}")
         logger.info(f"   Positive: {overall['positive']:,} ({overall['positive_ratio']:.1%})")
         logger.info(f"   Negative: {overall['negative']:,} ({overall['negative_ratio']:.1%})")
         logger.info(f"   Neutral:  {overall['neutral']:,}")
         
-        logger.info(f"\n🏆 Top Features by Mentions:")
+        logger.info("")
+        logger.info("Top Features by Mentions:")
         for feature, count in list(report["top_features"].items())[:5]:
             logger.info(f"   {feature:20} : {count:,} mentions")
         
-        logger.info(f"\n🎯 Feature Sentiment Scores (Top 5 Positive):")
+        logger.info("")
+        logger.info("Feature Sentiment Scores (Top 5 Positive):")
         features = report["feature_sentiments"]
         top_features = sorted(features.items(), key=lambda x: x[1]["sentiment_score"], reverse=True)[:5]
         for feature, stats in top_features:
@@ -230,7 +233,7 @@ class SentimentAnalyzer:
         with open(output_file, "w") as f:
             json.dump(report, f, indent=2, default=str)
         
-        logger.info(f"\n💾 Report exported to: {output_file}")
+        logger.info(f"\n[OK] Report exported to: {output_file}")
 
 
 def main():

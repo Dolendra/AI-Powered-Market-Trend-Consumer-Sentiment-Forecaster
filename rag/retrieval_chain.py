@@ -79,7 +79,7 @@ Answer:"""
             chain_type_kwargs={"prompt": self.prompt_template}
         )
         
-        logger.info("✅ RAG query chain initialized")
+        logger.info("RAG query chain initialized")
     
     def query(self, question: str, k: int = 5, filters: Dict = None) -> Dict:
         """
@@ -93,7 +93,7 @@ Answer:"""
         Returns:
             Dictionary with answer and source documents
         """
-        logger.info(f"🔍 Query: {question}")
+        logger.info("Query: %s", question)
         
         # Update retriever with filters if provided
         if filters:
@@ -117,11 +117,11 @@ Answer:"""
                     "metadata": doc.metadata,
                 })
             
-            logger.info(f"✅ Retrieved {len(response['sources'])} relevant documents")
+            logger.info("Retrieved %s relevant documents", len(response["sources"]))
             return response
             
         except Exception as e:
-            logger.error(f"❌ Error querying RAG: {e}")
+            logger.error("Error querying RAG: %s", e)
             return {
                 "question": question,
                 "answer": f"Error processing query: {str(e)}",
@@ -258,7 +258,7 @@ def main():
                 print(f"   Sentiment: {source['metadata'].get('sentiment', 'N/A')}")
         
     except Exception as e:
-        logger.error(f"❌ Error: {e}")
+        logger.error("Error: %s", e)
         sys.exit(1)
 
 

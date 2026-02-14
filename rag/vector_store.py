@@ -113,22 +113,22 @@ class VectorStoreManager:
                         region="us-east-1"
                     )
                 )
-                logger.info(f"✅ Index '{self.index_name}' created successfully")
+                logger.info("Index '%s' created successfully", self.index_name)
             else:
-                logger.info(f"✅ Index '{self.index_name}' already exists")
+                logger.info("Index '%s' already exists", self.index_name)
             
             # Connect to index
             self.index = self.pc.Index(self.index_name)
             
         except Exception as e:
-            logger.error(f"❌ Error managing Pinecone index: {e}")
+            logger.error("Error managing Pinecone index: %s", e)
             raise
     
     def load_data_from_csv(self, csv_path: Path) -> pd.DataFrame:
         """Load processed data from CSV file."""
         logger.info(f"Loading data from: {csv_path}")
         df = pd.read_csv(csv_path)
-        logger.info(f"✅ Loaded {len(df)} records")
+        logger.info("Loaded %s records", len(df))
         return df
     
     def prepare_documents(self, df: pd.DataFrame) -> List[Dict]:
@@ -171,7 +171,7 @@ class VectorStoreManager:
                 "metadata": metadata
             })
         
-        logger.info(f"✅ Prepared {len(documents)} documents")
+        logger.info("Prepared %s documents", len(documents))
         return documents
     
     def chunk_documents(self, documents: List[Dict]) -> List[Dict]:
@@ -192,7 +192,7 @@ class VectorStoreManager:
                     }
                 })
         
-        logger.info(f"✅ Created {len(chunked_docs)} chunks from {len(documents)} documents")
+        logger.info("Created %s chunks from %s documents", len(chunked_docs), len(documents))
         return chunked_docs
     
     def populate_vector_store(self, csv_path: Path = None) -> None:
@@ -222,7 +222,7 @@ class VectorStoreManager:
         existing_count = stats.get("total_vector_count", 0)
         
         if existing_count > 0:
-            logger.warning(f"⚠️ Index already contains {existing_count} vectors")
+            logger.warning("Index already contains %s vectors", existing_count)
             response = input("Do you want to delete existing vectors and re-index? (y/n): ")
             if response.lower() == 'y':
                 logger.info("Deleting existing index...")
@@ -276,11 +276,11 @@ class VectorStoreManager:
                     pinecone_api_key=self.pinecone_api_key
                 )
         
-        logger.info("✅ Vector store populated successfully!")
+        logger.info("Vector store populated successfully")
         
         # Verify
         stats = self.index.describe_index_stats()
-        logger.info(f"📊 Index stats: {stats.get('total_vector_count', 0)} vectors")
+        logger.info("Index stats: %s vectors", stats.get("total_vector_count", 0))
     
     def get_retriever(self, k: int = 5, filter_dict: Dict = None):
         """Get LangChain retriever for querying."""
@@ -352,9 +352,9 @@ class VectorStoreManager:
     
     def delete_index(self) -> None:
         """Delete the Pinecone index (use with caution!)."""
-        logger.warning(f"⚠️ Deleting index: {self.index_name}")
+        logger.warning("Deleting index: %s", self.index_name)
         self.pc.delete_index(self.index_name)
-        logger.info("✅ Index deleted")
+        logger.info("Index deleted")
 
 
 def main():
@@ -367,10 +367,10 @@ def main():
     try:
         manager = VectorStoreManager()
         manager.populate_vector_store()
-        logger.info("✅ Vector store setup complete!")
+        logger.info("Vector store setup complete")
         
     except Exception as e:
-        logger.error(f"❌ Error: {e}")
+        logger.error("Error: %s", e)
         sys.exit(1)
 
 

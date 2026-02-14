@@ -1,7 +1,133 @@
 .app-container {
   padding: 20px;
+  position: relative;
 }
 
 .MuiPaper-root {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Floating RAG chat pop-up */
+.chat-float-wrapper {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1300;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.chat-float-panel {
+  width: 380px;
+  max-width: calc(100vw - 48px);
+  max-height: 600px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.chat-float-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+  color: #fff;
+}
+
+.chat-float-body {
+  padding: 16px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 200px;
+}
+
+.chat-float-fab {
+  flex-shrink: 0;
+  box-shadow: 0 4px 20px rgba(25, 118, 210, 0.4);
+}
+
+.chat-float-fab:hover {
+  box-shadow: 0 6px 24px rgba(25, 118, 210, 0.5);
+}
+
+/* Markdown content styling */
+.markdown-content {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.markdown-content p {
+  margin: 8px 0;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+  margin: 8px 0;
+  padding-left: 24px;
+}
+
+.markdown-content li {
+  margin: 4px 0;
+}
+
+.markdown-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 12px 0;
+  font-size: 13px;
+}
+
+.markdown-content table thead {
+  display: table-header-group;
+  vertical-align: middle;
+}
+
+.markdown-content table tbody {
+  display: table-row-group;
+  vertical-align: middle;
+}
+
+.markdown-content table tr {
+  display: table-row;
+  vertical-align: inherit;
+}
+
+.markdown-content table th,
+.markdown-content table td {
+  border: 1px solid #ddd;
+  padding: 10px 12px;
+  text-align: left;
+  display: table-cell;
+  vertical-align: inherit;
+}
+
+.markdown-content table th {
+  background-color: #1976d2;
+  color: white;
+  font-weight: bold;
+}
+
+.markdown-content table tr:nth-child(even) {
+  background-color: #f5f5f5;
+}
+
+.markdown-content table tr:hover {
+  background-color: #e3f2fd;
+}
+
+/* Bold text in markdown */
+.markdown-content strong,
+.markdown-content b {
+  font-weight: bold;
+}
+
+/* Emphasis/italic in markdown */
+.markdown-content em,
+.markdown-content i {
+  font-style: italic;
 }

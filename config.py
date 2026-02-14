@@ -13,7 +13,7 @@ ENV_FILE = Path(__file__).parent / ".env"
 if ENV_FILE.exists():
     load_dotenv(ENV_FILE)
 else:
-    print("⚠️ WARNING: .env file not found. Using environment variables or defaults.")
+    print("WARNING: .env file not found. Using environment variables or defaults.")
 
 # ============================================================
 # PROXY CONFIGURATION (for corporate networks)
@@ -30,7 +30,7 @@ if HTTP_PROXY or HTTPS_PROXY:
     if HTTPS_PROXY:
         os.environ["HTTPS_PROXY"] = HTTPS_PROXY
     logger_temp = logging.getLogger("config")
-    logger_temp.info(f"✅ Proxy configured: {HTTP_PROXY or HTTPS_PROXY}")
+    logger_temp.info("Proxy configured: %s", HTTP_PROXY or HTTPS_PROXY)
 
 # ============================================================
 # API CONFIGURATION
@@ -39,9 +39,9 @@ YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
 if not YOUTUBE_API_KEY:
-    raise ValueError("❌ YOUTUBE_API_KEY not set in .env or environment")
+    raise ValueError("YOUTUBE_API_KEY not set in .env or environment")
 if not GROQ_API_KEY:
-    raise ValueError("❌ GROQ_API_KEY not set in .env or environment")
+    raise ValueError("GROQ_API_KEY not set in .env or environment")
 
 GROQ_MODEL = "openai/gpt-oss-120b"
 
@@ -122,11 +122,21 @@ DASHBOARD_HOST = os.getenv("DASHBOARD_HOST", "0.0.0.0")
 FEATURE_SENTIMENT_CLEANED_FILE = PROCESSED_DATA_DIR / "feature_sentiment_cleaned.csv"
 
 # ============================================================
+# ALERTS & REPORTING (yagmail, thresholds)
+# ============================================================
+YAGMAIL_USER = os.getenv("YAGMAIL_USER", "")
+YAGMAIL_APP_PASSWORD = os.getenv("YAGMAIL_APP_PASSWORD", "") or os.getenv("YAGMAIL_PASSWORD", "")
+ALERT_EMAIL_TO = [e.strip() for e in os.getenv("ALERT_EMAIL_TO", "").split(",") if e.strip()]
+SENTIMENT_SPIKE_THRESHOLD = float(os.getenv("SENTIMENT_SPIKE_THRESHOLD", "0.15"))
+TREND_SHIFT_THRESHOLD = float(os.getenv("TREND_SHIFT_THRESHOLD", "0.12"))
+REPORTS_DIR = PROCESSED_DATA_DIR / "reports"
+
+# ============================================================
 # LOGGING CONFIGURATION
 # ============================================================
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 LOG_FILE = Path(__file__).parent / os.getenv("LOG_FILE", "pipeline.log")
 LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 
-print(f"✅ Configuration loaded successfully")
+print("Configuration loaded successfully")
 print(f"   Workers: {MAX_WORKERS}, Batch Size: {BATCH_SIZE}, Rate Limit: {API_RATE_LIMIT}s")
