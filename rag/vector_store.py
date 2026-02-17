@@ -33,7 +33,11 @@ if not USE_LANGCHAIN_PINECONE:
     except ImportError:
         from langchain.vectorstores import Pinecone as LangChainPinecone
 
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+# Text splitter: langchain 0.2+ uses langchain-text-splitters
+try:
+    from langchain_text_splitters import RecursiveCharacterTextSplitter
+except ImportError:
+    from langchain.text_splitter import RecursiveCharacterTextSplitter
 import sys
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
