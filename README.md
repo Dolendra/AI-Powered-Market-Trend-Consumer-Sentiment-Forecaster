@@ -9,289 +9,443 @@
 - [Overview](#overview)
 - [Features](#features)
 - [Technology Stack](#technology-stack)
-- [Installation](#installation)
-- [Usage](#usage)
 - [Project Structure](#project-structure)
-- [API Documentation](#api-documentation)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [Pipeline Stages](#pipeline-stages)
+- [RAG Dashboard](#rag-dashboard)
+- [API Endpoints](#api-endpoints)
 - [Contributing](#contributing)
 - [License](#license)
 - [Contact](#contact)
 
 ## 🎯 Overview
 
-The **AI-Powered Market Trend & Consumer Sentiment Forecaster** is an intelligent system designed to analyze market trends and consumer sentiment data to provide accurate predictions and insights. This project leverages machine learning algorithms and natural language processing to help businesses understand market dynamics and consumer behavior patterns.
+The **AI-Powered Market Trend & Consumer Sentiment Forecaster** is an intelligent system designed to analyze consumer sentiment data from YouTube and other sources. This project focuses on extracting, processing, and analyzing product reviews (specifically Redmi audio products) to provide actionable insights through sentiment analysis, feature extraction, and RAG-powered knowledge retrieval.
 
-Whether you're a financial analyst, business strategist, or data scientist, this tool provides actionable insights from complex market and sentiment data.
+The pipeline orchestrates data ingestion, cleaning, and feature extraction, while the RAG (Retrieval-Augmented Generation) system enables intelligent querying of sentiment data using LLMs.
 
 ## ✨ Features
 
-- **Market Trend Analysis**: Real-time analysis of market movements and trend identification
-- **Sentiment Analysis**: Advanced NLP-based consumer sentiment extraction from multiple sources
-- **Predictive Forecasting**: AI-driven predictions for future market trends
-- **Interactive Dashboard**: User-friendly web interface for data visualization
-- **Real-time Updates**: Live data processing and continuous analysis
-- **Customizable Models**: Flexible machine learning models for different market segments
-- **Multi-source Integration**: Aggregate data from multiple market and social data sources
-- **Historical Analysis**: Comprehensive historical trend tracking and comparison
+- **YouTube Data Ingestion**: Automated collection of video comments and metadata using YouTube API
+- **Data Cleaning & Preprocessing**: Multi-stage data cleaning pipeline with validation
+- **Feature Extraction**: Advanced feature-based sentiment analysis for product reviews
+- **RAG System**: Retrieval-Augmented Generation with Pinecone vector store and Groq LLM
+- **Interactive Dashboard**: Plotly-based visualization of sentiment trends and analytics
+- **Pipeline Orchestration**: Health monitoring, rollback capabilities, and comprehensive logging
+- **Email Alerts**: Automated alerts for sentiment spikes and trend shifts
+- **PDF & Excel Reports**: Generate formatted reports with sentiment insights
+- **Multi-format Output**: CSV exports with feature-level sentiment analysis
 
 ## 🛠 Technology Stack
 
-### Backend
-- **Python** (84.8%) - Core data processing and machine learning
-  - TensorFlow/PyTorch - Deep learning models
-  - Pandas & NumPy - Data manipulation
-  - Scikit-learn - Machine learning algorithms
-  - NLTK/SpaCy - Natural language processing
-  - Flask/FastAPI - RESTful API
+### Backend - Core Data Processing
+- **Python 3.8+** - Core language
+  - **pandas** (2.1.4) - Data manipulation and analysis
+  - **numpy** (≥1.24.0) - Numerical computing
+  - **python-dotenv** - Environment configuration
+  - **requests** - HTTP client for API calls
+  - **tqdm** - Progress bar utilities
+  - **urllib3** - Advanced HTTP client with proxy support
+
+### APIs & LLM Integration
+- **google-api-python-client** (≥2.100.0) - YouTube Data API v3
+- **groq** (≥0.4.2) - Groq LLM API for intelligent queries
+- **langdetect** (1.0.9) - Language detection
+
+### RAG & Vector Database
+- **langchain** (≥0.2.0) - LLM framework core
+- **langchain-community** (≥0.2.0) - Community integrations
+- **langchain-core** (≥0.2.0) - Core abstractions
+- **langchain-text-splitters** (≥0.2.0) - Document chunking
+- **langchain-pinecone** (≥0.1.0) - Pinecone integration
+- **langchain-huggingface** (≥0.0.1) - HuggingFace embeddings
+- **pinecone-client** (≥3.0.0) - Vector database client
+- **sentence-transformers** (≥2.2.0, <3.0.0) - Embedding model (all-MiniLM-L6-v2)
+
+### Dashboard & API
+- **plotly** (≥5.18.0) - Interactive data visualization
+- **fastapi** (≥0.109.0) - Modern Python web framework
+- **uvicorn[standard]** (≥0.27.0) - ASGI server
+- **pydantic** (≥2.0.0) - Data validation
+- **kaleido** (≥0.2.1) - Static image export for Plotly
+
+### Alerts & Reporting
+- **yagmail** (≥0.15.0) - Email alerts via Gmail
+- **reportlab** (≥4.0.0) - PDF report generation
+- **openpyxl** (≥3.1.0) - Excel file generation
 
 ### Frontend
-- **JavaScript** (13.6%) - Interactive user interface
-  - React/Vue.js - UI framework
-  - D3.js/Chart.js - Data visualization
-  - Axios - API client
-
-### Styling
-- **CSS** (1.6%) - User interface styling
-  - Bootstrap/Tailwind CSS - Responsive design
-  - Custom styling for visualizations
-
-## 📦 Installation
-
-### Prerequisites
-- Python 3.8+
-- Node.js 14+
-- pip and npm package managers
-- Virtual environment (recommended)
-
-### Backend Setup
-
-```bash
-# Clone the repository
-git clone https://github.com/Dolendra/AI-Powered-Market-Trend-Consumer-Sentiment-Forecaster.git
-cd AI-Powered-Market-Trend-Consumer-Sentiment-Forecaster
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-
-# Install Python dependencies
-pip install -r requirements.txt
-
-# Configure environment variables
-cp .env.example .env
-# Edit .env with your configuration
-```
-
-### Frontend Setup
-
-```bash
-# Navigate to frontend directory
-cd frontend
-
-# Install JavaScript dependencies
-npm install
-
-# Start development server
-npm start
-```
-
-### Run the Application
-
-```bash
-# In the project root directory
-python app.py
-
-# The application will be available at http://localhost:5000
-```
-
-## 🚀 Usage
-
-### Basic Usage
-
-1. **Start the application**:
-   ```bash
-   python app.py
-   ```
-
-2. **Access the web interface**:
-   - Navigate to `http://localhost:5000` in your browser
-
-3. **Analyze Market Trends**:
-   - Select market segment and time period
-   - View trend analysis and forecasts
-   - Export results for further analysis
-
-4. **Consumer Sentiment Analysis**:
-   - Input data source or upload files
-   - Process sentiment analysis
-   - View sentiment distribution and insights
-
-### API Endpoints
-
-```bash
-# Get market trends
-GET /api/trends?segment=tech&period=30d
-
-# Analyze sentiment
-POST /api/sentiment/analyze
-Body: { "text": "Product review text here" }
-
-# Get forecasts
-GET /api/forecast?model=market_trend&days=30
-
-# Upload data
-POST /api/data/upload
-```
+- **JavaScript/React** - Interactive UI components
+- **D3.js/Chart.js** - Data visualization
+- **Axios** - API client for backend communication
 
 ## 📁 Project Structure
 
 ```
 AI-Powered-Market-Trend-Consumer-Sentiment-Forecaster/
-├── app.py                    # Main application entry point
-├── requirements.txt          # Python dependencies
-├── config.py                 # Configuration settings
-├── README.md                 # This file
-├── .env.example              # Environment variables template
 │
-├── backend/
-│   ├── models/               # Machine learning models
-│   │   ├── sentiment_model.py
-│   │   ├── forecast_model.py
-│   │   └── trend_analyzer.py
-│   ├── api/                  # RESTful API endpoints
-│   │   ├── routes.py
-│   │   ├── sentiment.py
-│   │   └── trends.py
-│   ├── data/                 # Data processing modules
-│   │   ├── preprocessor.py
-│   │   ├── fetcher.py
-│   │   └── validator.py
-│   └── utils/                # Utility functions
-│       ├── helpers.py
-│       └── logger.py
+├── README.md                          # This file
+├── requirements.txt                   # Full dependencies
+├── requirements-optimized.txt         # Optimized dependencies
+├── config.py                          # Configuration management
+├── main.py                            # Pipeline orchestrator
+├── health_check.py                    # Health monitoring
+├── analytics.py                       # Analytics utilities
+├── setup_rag.py                       # RAG system setup
+├── vercel.json                        # Vercel deployment config
+├── .env.example                       # Environment template
+├── .gitignore                         # Git ignore rules
+├── .python-version                    # Python version specification
 │
-├── frontend/
-│   ├── public/
-│   ├── src/
-│   │   ├── components/       # React components
-│   │   ├── pages/            # Page components
-│   │   ├── services/         # API services
-│   │   ├── styles/           # CSS files
-│   │   └── App.js
-│   └── package.json
+├── ingestion/
+│   └── youtuberedmiheadset.py        # YouTube API data ingestion
+│
+├── preprocessing/
+│   ├── cleaning.py                   # Data cleaning pipeline
+│   └── feature_extraction.py         # Feature-based sentiment extraction
+│
+├── rag/
+│   ├── __init__.py                   # Package initialization
+│   ├── vector_store.py               # Pinecone vector store management
+│   ├── groq_llm.py                   # Groq LLM integration
+│   ├── retrieval_chain.py            # RAG retrieval chain
+│   └── query_example.py              # Query examples
 │
 ├── data/
-│   ├── raw/                  # Raw data files
-│   ├── processed/            # Processed data
-│   └── models/               # Trained model artifacts
+│   ├── raw/                          # Raw YouTube data
+│   │   └── Redmi_YouTube_Large_Final.csv
+│   ├── intermediate/
+│   │   ├── clean_stage_1.csv         # After cleaning
+│   │   └── checkpoint.json           # Pipeline checkpoint
+│   └── processed/
+│       ├── feature_sentiment_cleaned.csv
+│       └── reports/                  # Generated reports
 │
-└── tests/
-    ├── test_models.py
-    ├── test_api.py
-    └── test_sentiment.py
+├── alerts/                           # Alert management
+├── dashboards/                       # Dashboard configurations
+└── reports/                          # Report outputs
+
+Key Output Files:
+├── pipeline.log                      # Execution logs
+└── Agile_Team_4.xlsx                # Project tracking
 ```
 
-## 📖 API Documentation
+## 📦 Installation
 
-### Authentication
+### Prerequisites
+- Python 3.8+
+- pip package manager
+- Virtual environment (recommended)
+- API Keys:
+  - YouTube Data API key
+  - Groq API key
+  - Pinecone API key (for RAG)
+
+### Setup Steps
+
 ```bash
-# Include API key in headers
-Authorization: Bearer YOUR_API_KEY
+# 1. Clone the repository
+git clone https://github.com/Dolendra/AI-Powered-Market-Trend-Consumer-Sentiment-Forecaster.git
+cd AI-Powered-Market-Trend-Consumer-Sentiment-Forecaster
+
+# 2. Create virtual environment
+python -m venv venv
+
+# 3. Activate virtual environment
+# On Linux/macOS:
+source venv/bin/activate
+# On Windows:
+venv\Scripts\activate
+
+# 4. Install dependencies
+pip install -r requirements.txt
+# OR for optimized installation:
+pip install -r requirements-optimized.txt
+
+# 5. Configure environment variables
+cp .env.example .env
+# Edit .env with your API keys and settings
 ```
 
-### Endpoints
+### Environment Configuration (.env)
 
-#### 1. Market Trends
-```bash
-GET /api/v1/trends
-Parameters:
-  - segment: string (required) - Market segment
-  - period: string - Time period (default: 30d)
-  - source: string - Data source
+```env
+# YouTube API
+YOUTUBE_API_KEY=your_youtube_api_key_here
+
+# Groq LLM
+GROQ_API_KEY=your_groq_api_key_here
+
+# Pinecone Vector Database
+PINECONE_API_KEY=your_pinecone_api_key_here
+PINECONE_INDEX_NAME=redmi-sentiment-reviews
+
+# Processing Configuration
+MAX_WORKERS=4
+BATCH_SIZE=20
+API_RATE_LIMIT=0.5
+TIMEOUT_SECONDS=30
+MAX_SEARCH_RESULTS=50
+MAX_COMMENTS_PER_VIDEO=500
+
+# RAG Configuration
+EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
+RAG_TOP_K=5
+
+# Dashboard
+DASHBOARD_PORT=8000
+DASHBOARD_HOST=0.0.0.0
+
+# Email Alerts (optional)
+YAGMAIL_USER=your_gmail@gmail.com
+YAGMAIL_APP_PASSWORD=your_app_password
+ALERT_EMAIL_TO=recipient@email.com
+
+# Alert Thresholds
+SENTIMENT_SPIKE_THRESHOLD=0.15
+TREND_SHIFT_THRESHOLD=0.12
+
+# Logging
+LOG_LEVEL=INFO
+LOG_FILE=pipeline.log
+
+# Proxy (optional, for corporate networks)
+HTTP_PROXY=http://proxy.company.com:8080
+HTTPS_PROXY=https://proxy.company.com:8080
 ```
 
-#### 2. Sentiment Analysis
+## 🚀 Usage
+
+### Running the Complete Pipeline
+
 ```bash
-POST /api/v1/sentiment/analyze
-Body: {
-  "text": "string (required)",
-  "language": "string (optional, default: en)"
+# Run all pipeline stages (ingestion → cleaning → extraction)
+python main.py
+
+# Run specific stage only
+python main.py --stage ingestion
+python main.py --stage cleaning
+python main.py --stage extraction
+
+# Skip certain stages (useful for resuming)
+python main.py --skip-stages ingestion cleaning
+```
+
+### Pipeline Stages
+
+#### 1. **Data Ingestion** (`ingestion/youtuberedmiheadset.py`)
+- Fetches YouTube video comments for Redmi products
+- Collects video metadata and engagement metrics
+- Outputs: `data/raw/Redmi_YouTube_Large_Final.csv`
+
+#### 2. **Data Cleaning** (`preprocessing/cleaning.py`)
+- Removes duplicates and null values
+- Normalizes text (lowercasing, whitespace handling)
+- Filters low-quality comments
+- Outputs: `data/intermediate/clean_stage_1.csv`
+
+#### 3. **Feature Extraction** (`preprocessing/feature_extraction.py`)
+- Extracts product features from comments (sound quality, battery, design, etc.)
+- Performs feature-level sentiment analysis
+- Generates feature-sentiment pairs
+- Outputs: `data/processed/feature_sentiment_cleaned.csv`
+
+### Setting Up the RAG System
+
+```bash
+# Initialize vector store and process data
+python setup_rag.py
+
+# This:
+# 1. Reads processed sentiment data
+# 2. Generates embeddings using Sentence Transformers
+# 3. Stores vectors in Pinecone
+# 4. Prepares retrieval chain with Groq LLM
+```
+
+### Running the Dashboard
+
+```bash
+# Start FastAPI server with Plotly dashboard
+python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+# Access dashboard at: http://localhost:8000
+```
+
+### Health Checks
+
+```bash
+# Run comprehensive health checks
+python health_check.py
+
+# Verifies:
+# - File integrity
+# - Data quality
+# - Configuration validation
+# - API connectivity
+```
+
+### Analytics & Reports
+
+```bash
+# Generate sentiment analytics
+python analytics.py
+
+# Produces:
+# - Sentiment distribution charts
+# - Feature popularity analysis
+# - Trend reports
+# - Time-series visualizations
+```
+
+## 📊 RAG Dashboard Guide
+
+The RAG Dashboard provides intelligent querying of sentiment data:
+
+```python
+# Query sentiment insights
+from rag.retrieval_chain import create_retrieval_chain
+
+chain = create_retrieval_chain()
+response = chain.invoke("What features get the most negative sentiment?")
+print(response)
+
+# Example queries:
+# - "What do users say about battery life?"
+# - "Which features have the highest positive sentiment?"
+# - "What are common complaints in recent reviews?"
+# - "Compare sound quality feedback across months"
+```
+
+**Features:**
+- Context-aware responses using retrieved sentiment data
+- Multi-hop reasoning with Groq LLM
+- Real-time data retrieval from Pinecone
+- Export query results
+
+See [RAG_DASHBOARD_GUIDE.md](RAG_DASHBOARD_GUIDE.md) for detailed instructions.
+
+## 📖 API Endpoints
+
+Once the FastAPI server is running, access these endpoints:
+
+### Sentiment Analysis
+```bash
+POST /api/sentiment/analyze
+Content-Type: application/json
+
+{
+  "text": "Great sound quality but battery could be better",
+  "language": "en"
 }
 ```
 
-#### 3. Forecast
+### Feature Extraction
 ```bash
-GET /api/v1/forecast
-Parameters:
-  - model: string (required) - Model type
-  - days: integer - Forecast days ahead
-  - confidence: number - Confidence level (0-1)
+GET /api/features/extract?text=Your review text here
 ```
 
-#### 4. Data Upload
+### Sentiment Statistics
 ```bash
-POST /api/v1/data/upload
-Form Data:
-  - file: multipart file (CSV, JSON)
-  - source: string - Data source identifier
+GET /api/sentiment/stats?feature=battery&period=30d
+```
+
+### RAG Query
+```bash
+POST /api/rag/query
+Content-Type: application/json
+
+{
+  "query": "What do users think about sound quality?"
+}
+```
+
+### Data Upload
+```bash
+POST /api/data/upload
+Content-Type: multipart/form-data
+
+- file: [CSV or JSON file]
+- source: youtube
 ```
 
 ## 🧪 Testing
 
 ```bash
 # Run all tests
-python -m pytest tests/
+pytest tests/
 
 # Run specific test file
-python -m pytest tests/test_models.py
+pytest tests/test_sentiment_analysis.py -v
 
-# Run with coverage
-python -m pytest --cov=backend tests/
+# Generate coverage report
+pytest --cov=preprocessing --cov=ingestion tests/
 ```
 
-## 📊 Performance Metrics
+## 📈 Performance Metrics
 
-- **Sentiment Analysis Accuracy**: 92%+
-- **Forecast RMSE**: <5% deviation
-- **API Response Time**: <500ms
-- **Data Processing Speed**: 10,000+ records/minute
+Based on the system configuration:
 
-## 🔧 Configuration
+- **Embedding Generation**: ~1,000 vectors/minute with Sentence Transformers
+- **Sentiment Analysis**: Batch processing at 20-100 records/batch
+- **API Calls**: Rate-limited to 0.5s per call (configurable)
+- **Dashboard Load Time**: <2s for 10,000+ records
+- **RAG Query Response**: <3s average (includes LLM inference)
 
-Edit `.env` file to customize:
+## 🔧 Advanced Configuration
 
+### Proxy Setup (Corporate Networks)
 ```env
-# API Configuration
-API_HOST=0.0.0.0
-API_PORT=5000
-DEBUG=False
-
-# Database
-DATABASE_URL=sqlite:///data.db
-
-# Model Configuration
-MODEL_PATH=./data/models/
-SENTIMENT_MODEL=roberta-base
-FORECAST_HORIZON=30
-
-# Data Sources
-DATA_SOURCE_API_KEY=your_api_key_here
+HTTP_PROXY=http://proxy.company.com:8080
+HTTPS_PROXY=https://proxy.company.com:8080
 ```
+
+### Custom Pinecone Index
+```python
+# In config.py
+PINECONE_INDEX_NAME = "custom-index-name"
+PINECONE_ENVIRONMENT = "us-west1-gcp"
+```
+
+### Parallel Processing
+```env
+MAX_WORKERS=8        # Increase for faster processing
+BATCH_SIZE=50        # Larger batches for GPU environments
+```
+
+### Custom Alert Thresholds
+```env
+SENTIMENT_SPIKE_THRESHOLD=0.20    # 20% change triggers alert
+TREND_SHIFT_THRESHOLD=0.15        # 15% trend change
+```
+
+## 📚 Additional Resources
+
+- [Quick Start Guide](QUICKSTART.md)
+- [Configuration & Commands](CONFIG_AND_COMMANDS.md)
+- [RAG Dashboard Guide](RAG_DASHBOARD_GUIDE.md)
+- [Vercel Deployment](VERCEL_DEPLOYMENT.md)
+- [Storyboard Presentation](STORYBOARD_PRESENTATION.md)
+- [Next Steps for Success](SUCCESS_NEXT_STEPS.md)
 
 ## 🤝 Contributing
 
 We welcome contributions! Please follow these steps:
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+2. Create a feature branch (`git checkout -b feature/your-feature`)
+3. Make your changes and test thoroughly
+4. Commit with clear messages (`git commit -m 'Add feature: description'`)
+5. Push to your branch (`git push origin feature/your-feature`)
+6. Open a Pull Request with detailed description
 
-Please ensure:
-- Code follows PEP 8 style guidelines
-- Tests are added for new features
-- Documentation is updated
+### Code Standards
+- Follow PEP 8 style guidelines
+- Add docstrings to all functions
+- Include unit tests for new features
+- Update documentation as needed
 
 ## 📝 License
 
@@ -302,13 +456,13 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 **Author**: Dolendra  
 **GitHub**: [@Dolendra](https://github.com/Dolendra)
 
-For questions or support, please:
-- Open an issue on GitHub
-- Contact via email
-- Check the documentation wiki
+For questions or support:
+- Open an issue on [GitHub](https://github.com/Dolendra/AI-Powered-Market-Trend-Consumer-Sentiment-Forecaster/issues)
+- Check the [documentation](https://github.com/Dolendra/AI-Powered-Market-Trend-Consumer-Sentiment-Forecaster/wiki)
+- Review existing issues and discussions
 
 ---
 
-**Last Updated**: May 2026
+**Last Updated**: May 13, 2026
 
-⭐ If you find this project helpful, please consider giving it a star!
+⭐ If you find this project helpful, please consider giving it a star on GitHub!
